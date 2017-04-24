@@ -17,36 +17,36 @@
 	</head>
 	<body>
 		<div>
-		<div class="form">
+			<div class="form">
 
-			Add a new entry to your reading list:  <br>
+				Add a new entry to your reading list:  <br>
 
-			Name: <br><input type="text" id="NAME" name="NAME"><br>
-			URL: <br><input type="text"  id= "URL"name="URL"><br>
-			Description: <br><input type="text" id= "THEDESC"name="THEDESC"><br>
-			<input type="submit"  id="btn_submit" name="submit" value="Add"/>
+				Name: <br><input type="text" id="NAME" name="NAME"><br>
+				URL: <br><input type="text"  id= "URL"name="URL"><br>
+				Description: <br><input type="text" id= "THEDESC"name="THEDESC"><br>
+				<input type="submit"  id="btn_submit" name="submit" value="Add"/>
+			</div>
+
+			<form class="form">
+				Update  a value<br><br>
+				<div class="indicator" id="updateIndicator">
+				</div>
+
+				Select an ID to update: <br><input type="text" id="updateId" value=""><br>
+				Updated Name:<br><input type="text" id="updateName" value=""><br>
+				Updated URL<br><input type="text" id="updateURL" value=""><br>
+				Updated Description<br><input type="text" id="updateDesc" value=""><br>
+				<br><input type="button" onclick="updateValuesById()" value="Update">
+			</form>
+			<form class="form">
+				Delete a value<br><br>
+				<div class="indicator" id="updateIndicatorDelete">
+				</div>
+
+				Select an ID to Delete: <br><input type="text" id="deleteId" value="">
+				<br><input type="button" onclick="DeleteById()" value="Delete">
+			</form>
 		</div>
-
-		<form class="form">
-			Update  a value<br><br>
-			<div class="indicator" id="updateIndicator">
-			</div>
-
-			Select an ID to update: <br><input type="text" id="updateId" value=""><br>
-			Updated Name:<br><input type="text" id="updateName" value=""><br>
-			Updated URL<br><input type="text" id="updateURL" value=""><br>
-			Updated Description<br><input type="text" id="updateDesc" value=""><br>
-			<br><input type="button" onclick="updateValuesById()" value="Update">
-		</form>
-		<form class="form">
-			Delete a value<br><br>
-			<div class="indicator" id="updateIndicatorDelete">
-			</div>
-
-			Select an ID to Delete: <br><input type="text" id="deleteId" value="">
-			<br><input type="button" onclick="DeleteById()" value="Delete">
-		</form>
-	</div>
 
 		<form class="form2">
 			Search For A Specific Entry By ID!<br>
@@ -299,6 +299,16 @@
 		div{
 			text-align: center;
 		}
+		footer{
+			font-family: 'Archivo Narrow';
+			font-size: 12px;
+			font-family: 'Archivo Narrow';
+			color: white;
+			margin: 50px;
+		}
 
 	</style>
+	<footer>
+		background image retieved from http://unsplash.net, fonts retrieved from https://fonts.googleapis.com, js apis retreived from http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js 
+	</footer>
 </html>
