@@ -1,0 +1,304 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <link href="https://fonts.googleapis.com/css?family=Archivo+Black|Archivo+Narrow|Julius+Sans+One" rel="stylesheet">
+        <!-- Place favicon.ico in the root directory -->
+
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+        <Header>RESTful Manager</Header>
+    </head>
+    <body>
+
+
+        <div class="Instructions">
+            <p>welcome to the RESTful manager, this page will allow you to communicate with a server program and will display data sent and recieved.</p>
+        </div>
+
+
+        <div class="form">
+
+            Add a new entry to your reading list:  <br>
+
+            Name: <br><input type="text" id="NAME" name="NAME"><br>
+            URL: <br><input type="text"  id= "URL"name="URL"><br>
+            Description: <br><input type="text" id= "THEDESC"name="THEDESC"><br>
+            <input type="submit"  id="btn_submit" name="submit" value="Add"/>
+        </div>
+
+        <form class="form2">
+            Search For A Specific Entry By ID!<br>
+            <input type="text" id="searchParamId">
+            <input type="button" onclick="showResultsId(document.getElementById('searchParamId').value)" value="Search">
+        </form>
+
+        <form class="form2">
+            Search For A Specific Entry By Name! <br>
+            <input type="text" id="searchParamName">
+            <input type="button" onclick="showResultsName(document.getElementById('searchParamName').value)" value="Search">
+        </form>
+        <br>
+        <div id="txtHint" class="txtHint"><b>Search Results will be listed here</b></div>
+
+        <form class="form">
+            Update  a value<br><br>
+            <div class="indicator" id="updateIndicator">
+            </div>
+
+            Select an ID to update: <br><input type="text" id="updateId" value=""><br>
+            Updated Name:<br><input type="text" id="updateName" value=""><br>
+            Updated URL<br><input type="text" id="updateURL" value=""><br>
+            Updated Description<br><input type="text" id="updateDesc" value=""><br>
+            <br><input type="button" onclick="updateValuesById()" value="Update">
+        </form>
+         <form class="form">
+            Delete a value<br><br>
+            <div class="indicator" id="updateIndicatorDelete">
+            </div>
+
+            Select an ID to Delete: <br><input type="text" id="deleteId" value="">
+            <br><input type="button" onclick="DeleteById()" value="Delete">
+        </form>
+
+        <script>
+            <!-- 
+                //Browser Support Code
+                function ajaxFunction(){
+                var ajaxRequest;  // The variable that makes Ajax possible!
+
+                try{
+                    // Opera 8.0+, Firefox, Safari
+                    ajaxRequest = new XMLHttpRequest();
+                }catch (e){
+                    // Internet Explorer Browsers
+                    try{
+                        ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                    }catch (e) {
+                        try{
+                            ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        }catch (e){
+                            // Something went wrong
+                            alert("Your browser broke!");
+                            return false;
+                        }
+                    }
+                } }
+            //on the click of the submit button 
+            $("#btn_submit").click(function(){
+                //get the form values
+                var NAME = $('#NAME').val();     
+                var URL = $('#URL').val();
+                var THEDESC = $('#THEDESC').val();
+                // make the postdata
+                // var postData = '&ID='+ID+'&NAME='+NAME+'&PASSWORD='+PASSWORD+'&CREDITS'+CREDITS+'&EMAIL_ID'+EMAIL_ID+'&CREATED_ON'+CREATED_ON+'&MODIFIED_ON'+MODIFIED_ON;
+                // alert(postData);
+                var myData={"NAME":NAME,"URL":URL,"THEDESC":THEDESC};
+                //call your .php script in the background, 
+                //when it returns it will call the success function if the request was successful or 
+                //the error one if there was an issue (like a 404, 500 or any other error status)
+                $.ajax({
+                    url : "Submit_Form.php",
+                    type: "POST",
+                    data : myData,
+                    success: function(data,status,xhr)
+                    {
+                        //if success then just output the text to the status div then clear the form inputs to prepare for new data
+                        alert("Item Added!");
+                    }
+
+                }); 
+            }); 
+
+            function showResultsId(str) {
+                if (str=="") {
+                    document.getElementById("txtHint").innerHTML="";
+                    return;
+                }
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                } else { // code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function() {
+                    if (this.readyState==4 && this.status==200) {
+                        document.getElementById("txtHint").innerHTML=this.responseText;
+                    }
+                }
+                xmlhttp.open("GET","getResultId.php?q="+str,true);
+                xmlhttp.send();
+            }
+            function showResultsName(str) {
+                if (str=="") {
+                    document.getElementById("txtHint").innerHTML="";
+                    return;
+                }
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                } else { // code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function() {
+                    if (this.readyState==4 && this.status==200) {
+                        document.getElementById("txtHint").innerHTML=this.responseText;
+                    }
+                }
+                xmlhttp.open("GET","getResultName.php?q="+str,true);
+                xmlhttp.send();
+            }
+            function updateValuesById() {
+
+                var theId = document.getElementById("updateId").value;
+                var theName = document.getElementById("updateName").value;
+                var theURL = document.getElementById("updateURL").value;
+                var theDesc = document.getElementById("updateDesc").value;
+
+                var str = theId+","+theName+","+theURL+","+theDesc;
+
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                } else { // code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function() {
+                    if (this.readyState==4 && this.status==200) {
+                        document.getElementById("updateIndicator").innerHTML=this.responseText;
+                    }
+                }
+                xmlhttp.open("GET","updateID.php?values="+str,true);
+                xmlhttp.send();
+            }
+            function DeleteById() {
+
+                var theId = document.getElementById("deleteId").value;
+
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                } else { // code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange=function() {
+                    if (this.readyState==4 && this.status==200) {
+                        document.getElementById("updateIndicatorDelete").innerHTML=this.responseText;
+                    }
+                }
+                xmlhttp.open("GET","DeleteById.php?id="+theId,true);
+                xmlhttp.send();
+            }
+
+        </script>
+
+
+    </body>
+    <style>
+        Header{
+            text-align: center;
+            font-size: 46px;
+            font-family: 'Archivo Black';
+            color: white;
+            background-color: #0D588C;
+            background-size: contain;
+            height:100px;
+            line-height: 100px;
+            vertical-align: middle;
+            border-radius: 5px;
+        }
+        body{
+            background-color:bisque;
+        }
+        .Instructions{
+            background-color: #B24355;
+            height: 50%;
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            font-family: 'Archivo Narrow';
+            font-size: 18px;
+            line-height: inherit;
+            vertical-align: middle;
+            padding: auto;
+            color: white;
+            border-radius: 5px;
+
+        }
+        p{
+            text-align: center;
+            line-height: inherit;
+            vertical-align: middle;
+            margin: 5 auto;
+            padding: 3%;
+            border-radius: 5px;
+        }
+        .form{
+            border-radius: 5px;
+            background-color: #B24355;
+            height: 50%;
+            width: 40%;
+            margin: 0 auto;
+            margin-top: 10px; 
+            text-align: center;
+            font-family: 'Archivo Narrow';
+            font-size: 18px;
+            line-height: inherit;
+            vertical-align: middle;
+            padding: 10px;
+            color: white;
+        }
+        .form2{
+            border-radius: 5px;
+            background-color: #B24355;
+            display: inline-block;
+            height: 50%;
+            width: 46%;
+            margin: 0 auto;
+            margin-top: 10px; 
+            text-align: center;
+            font-family: 'Archivo Narrow';
+            font-size: 18px;
+            line-height: inherit;
+            vertical-align: middle;
+            padding: 10px;
+            color: white;
+        }
+
+        .txtHint{
+            border-radius: 5px;
+            background-color:  #0D588C;
+            height: 50%;
+            width: auto;
+            margin: 5 auto;
+            margin-top: 10px; 
+            text-align: center;
+            font-family: 'Archivo Narrow';
+            font-size: 18px;
+            line-height: inherit;
+            vertical-align: middle;
+            padding: 10px;
+            color: white;
+        }
+        .indicator{
+            border-radius: 5px;
+            background-color: #0D588C;
+            font-family: 'Archivo Narrow';
+            font-size: 18px;
+            line-height: inherit;
+            vertical-align: middle;
+            padding: 10px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin: 10px;
+            color: white;
+        }
+
+    </style>
+</html>
